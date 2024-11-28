@@ -4,9 +4,11 @@ deploy:
   before_script:
     - apt-get update && apt-get install -y lftp
   script:
-    - echo "Starting deployment to FTP server $FTP_SERVER... with $FTP_USERNAME && $FTP_PASSWORD "
+    - echo "Starting deployment to FTP server $FTP_SERVER..."
     - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-      set ftp:ssl-allow no;
+      set ftp:ssl-force true;
+      set ftp:ssl-protect-data true;
+      set ftp:ssl-allow yes;
       mirror --reverse --delete --verbose ./ /public_html/dhr-solutions;
       bye;
       "
