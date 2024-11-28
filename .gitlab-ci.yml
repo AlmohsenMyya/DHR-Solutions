@@ -1,12 +1,16 @@
 deploy:
   stage: deploy
-  image: php:7.4-cli  # Use a full PHP image with apt-get support
+  image: php:7.4-cli  # Use PHP 7.4 CLI image with apt-get
   before_script:
-    - apt-get update && apt-get install -y unzip lftp php7.4-exif
+    # Update package lists and install required dependencies
+    - apt-get update && apt-get install -y unzip lftp
+    # Enable the ext-exif extension manually
+    - docker-php-ext-enable exif || docker-php-ext-install exif
+    # Install Composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - echo "Installing Composer dependencies..."
-    - composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-exif
+    - composer install --no-dev --optimize-autoloader
     - echo "Starting deployment to FTP server $FTP_SERVER..."
     - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
