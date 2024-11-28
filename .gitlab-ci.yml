@@ -1,10 +1,15 @@
 deploy:
   stage: deploy
-  image: ubuntu:latest
+  image: composer:latest  # Use Composer image to handle dependencies
   before_script:
-    - apt-get update && apt-get install -y lftp
+    # Update and install necessary packages
+    - apt-get update && apt-get install -y lftp unzip
   script:
+    - echo "Installing Composer dependencies..."
+    # Install dependencies in a production-optimized way
+    - composer install --no-dev --optimize-autoloader
     - echo "Starting deployment to FTP server $FTP_SERVER..."
+    # Upload the entire project to the FTP server
     - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
       set ftp:ssl-protect-data true;
@@ -13,3 +18,4 @@ deploy:
       mirror --reverse --delete --verbose ./ /public_html/dhr-solutions;
       bye;
       "
+    - echo "Deployment completed successfully!"
