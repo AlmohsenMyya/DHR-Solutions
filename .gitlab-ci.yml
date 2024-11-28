@@ -1,21 +1,12 @@
-stages:
-  - deploy
-
 deploy:
   stage: deploy
-  only:
-    - main  # Run this job only on the 'main' branch
-  image: ubuntu:latest  # Use the Ubuntu image to run the commands
+  image: ubuntu:latest
   before_script:
-    - apt-get update && apt-get install -y lftp  # Install lftp for FTP deployment
+    - apt-get update && apt-get install -y lftp
   script:
-    - echo "Starting deployment..."
-    - lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
+    - echo "Starting deployment to FTP server $FTP_SERVER... with $FTP_USERNAME && $FTP_PASSWORD "
+    - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-allow no;
-      mirror --reverse --delete --verbose ./ /dhr-solutions.com/dhr-solutions;
+      mirror --reverse --delete --verbose ./ /public_html/dhr-solutions;
       bye;
       "
-    - echo "Deployment completed."
-  environment:
-    name: production
-    url: http://dhr-solutions.com/dhr-solutions
