@@ -9,6 +9,7 @@ deploy:
       set ftp:ssl-force true;
       set ftp:ssl-protect-data true;
       set ftp:ssl-allow yes;
+      set ssl:verify-certificate no;
       mirror --reverse --delete --verbose ./ /public_html/dhr-solutions;
       bye;
       "
