@@ -48,15 +48,17 @@ deploy-job:      # This job runs in the deploy stage.
     - echo "Deploying application..."
     - echo "Application successfully deployed."
 
-deploy:
+
+ftp_deploy:
   stage: deploy
-  environment:
-    name: production
+  image: ubuntu:latest
   script:
-    # Install necessary packages
     - apt-get update -y
-    - apt-get install -y lftp # Use lftp for FTP operations
-    
-    # Use lftp to upload files to the FTP server
+    - apt-get install -y lftp
+    - ls -la ./dist # Debugging step to check contents of the dist directory
     - |
-      lftp -u "$FTP_Username","$FTP_Password" -e "set ftp:passive-mode on; mirror -R ./your-local-directory /path/on/ftp/server; bye" "$FTP_Server"
+      lftp -u "$FTP_Username","$FTP_Password" -p "$FTP_Port" "$FTP_Server" <<-EOF
+        set ftp:passive-mode on
+        mirror -R ./ /home/dubiocea/dhr-solutions.com
+        bye
+      EOF
