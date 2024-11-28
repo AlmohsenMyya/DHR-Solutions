@@ -1,0 +1,25 @@
+name: CPanel Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  FTP-Deploy-Action:
+    name: FTP Deploy Action
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_Server }}
+          username: ${{ secrets.FTP_Username }}
+          password: ${{ secrets.FTP_Password }}
+          port: ${{ secrets.FTP_Port }}
