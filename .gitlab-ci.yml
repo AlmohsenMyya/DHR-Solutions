@@ -1,15 +1,13 @@
 deploy:
   stage: deploy
-  image: composer:latest  # Use Composer image to handle dependencies
+  image: php:7.4-cli  # Use a full PHP image with apt-get support
   before_script:
-    # Update and install necessary packages
-    - apt-get update && apt-get install -y lftp unzip
+    - apt-get update && apt-get install -y unzip lftp php7.4-exif
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - echo "Installing Composer dependencies..."
-    # Install dependencies in a production-optimized way
-    - composer install --no-dev --optimize-autoloader
+    - composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-exif
     - echo "Starting deployment to FTP server $FTP_SERVER..."
-    # Upload the entire project to the FTP server
     - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
       set ftp:ssl-protect-data true;
