@@ -4,40 +4,19 @@ deploy:
   before_script:
     # Install necessary tools
     - apt-get update && apt-get install -y unzip lftp git
-    # Download and set up Composer with retries
-    - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
-    - chmod +x /usr/local/bin/composer
-    # Enable the ext-exif PHP extension
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - docker-php-ext-install exif && docker-php-ext-enable exif
   script:
     - echo "Installing Composer dependencies..."
     - composer install --no-dev --optimize-autoloader
 
-    # Ensure full git history is available
-    - echo "Fetching full Git history..."
-    - git fetch --unshallow || true
-    - git fetch --all
-
-    # Determine last deployed commit
-    - echo "Determining last deployed commit..."
-    - |
-      if [ -f last-deployed-commit.txt ]; then
-        LAST_DEPLOYED_COMMIT=$(cat last-deployed-commit.txt)
-        echo "Last deployed commit: $LAST_DEPLOYED_COMMIT"
-        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD | grep -vE '^(\.git|node_modules|\.env)' > changed-files.txt
-      else
-        echo "No previous deployment found. Deploying all files..."
-        find . -type f ! -path './.git/*' ! -name '.env' > changed-files.txt
-      fi
-
-    # Output changed files
+    # Identify changed files
+    - echo "Generating list of changed files..."
+    - git diff --name-only HEAD~1 > changed-files.txt
     - echo "Changed files:"
     - cat changed-files.txt
 
-    # Ensure there are files to upload
-    - if [ ! -s changed-files.txt ]; then echo "No changes detected. Exiting."; exit 0; fi
-
-    # Upload changed files
+    # Upload only changed files
     - echo "Uploading changed files..."
     - |
       while read file; do
@@ -46,14 +25,9 @@ deploy:
         set ftp:ssl-protect-data true;
         set ftp:ssl-allow yes;
         set ssl:verify-certificate no;
-        mkdir -p /public_html/dhr-solutions/$(dirname $file);
-        put -O /public_html/dhr-solutions/$(dirname $file) $file;
+        put -O /public_html/dhr-solutions $file;
         bye;
         "
       done < changed-files.txt
-
-    # Save the current commit as the last deployed commit
-    - echo "Saving the current commit as the last deployed commit..."
-    - git rev-parse HEAD > last-deployed-commit.txt
     - echo "Deployment completed successfully!"
   timeout: 1h
