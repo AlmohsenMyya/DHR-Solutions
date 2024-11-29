@@ -1,24 +1,27 @@
 deploy:
   stage: deploy
-  image: php:8.2-cli  # Use PHP 8.2 for compatibility with symfony/css-selector and other dependencies
+  image: php:8.2-cli
   before_script:
-    # Update package lists and install necessary tools
+    # Update package lists and install required tools
     - apt-get update && apt-get install -y unzip lftp
     # Install Composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    # Enable ext-exif PHP extension
+    # Enable the ext-exif PHP extension
     - docker-php-ext-install exif && docker-php-ext-enable exif
   script:
     - echo "Installing Composer dependencies..."
-    # Install dependencies optimized for production
+    # Install production dependencies
     - composer install --no-dev --optimize-autoloader
     - echo "Starting deployment to FTP server $FTP_SERVER..."
-    # Deploy files using lftp with --only-newer to avoid rewriting unchanged files
+    # Deploy files using lftp with optimized settings to avoid unnecessary rewrites
     - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
       set ftp:ssl-protect-data true;
       set ftp:ssl-allow yes;
       set ssl:verify-certificate no;
+      set mirror:parallel-transfer-count 4;  # Transfer multiple files simultaneously
+      set mirror:use-cache true;  # Use cache to improve performance
+      set mirror:skip-noaccess true;  # Skip files that cannot be accessed
       mirror --reverse --delete --only-newer --verbose ./ /public_html/dhr-solutions;
       bye;
       "
