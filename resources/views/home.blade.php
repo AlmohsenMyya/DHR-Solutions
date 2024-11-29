@@ -1,5 +1,5 @@
 @extends('layouts.front')
-//test ok 9
+//test ok 10
 @section('title') {{$homesetting->meta_title}} @endsection
 @section('meta') {{$homesetting->meta_description}} @endsection
 
