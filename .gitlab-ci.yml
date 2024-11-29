@@ -24,10 +24,10 @@ deploy:
       if [ -f last-deployed-commit.txt ]; then
         LAST_DEPLOYED_COMMIT=$(cat last-deployed-commit.txt)
         echo "Last deployed commit: $LAST_DEPLOYED_COMMIT"
-        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD > changed-files.txt
+        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD | grep -vE '^(\.git|node_modules|\.env)' > changed-files.txt
       else
         echo "No previous deployment found. Deploying all files..."
-        find . -type f ! -name '*.git*' > changed-files.txt
+        find . -type f ! -path './.git/*' ! -name '.env' > changed-files.txt
       fi
 
     # Output changed files
@@ -46,7 +46,8 @@ deploy:
         set ftp:ssl-protect-data true;
         set ftp:ssl-allow yes;
         set ssl:verify-certificate no;
-        put -O /public_html/dhr-solutions $file;
+        mkdir -p /public_html/dhr-solutions/$(dirname $file);
+        put -O /public_html/dhr-solutions/$(dirname $file) $file;
         bye;
         "
       done < changed-files.txt
