@@ -1,5 +1,4 @@
 @extends('layouts.front')
-//test ok 15
 @section('title') {{$blogsettings->meta_title}} @endsection
 @section('meta') {{$blogsettings->meta_description}} @endsection
 
