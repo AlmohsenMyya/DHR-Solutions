@@ -2,8 +2,8 @@ deploy:
   stage: deploy
   image: php:8.2-cli
   before_script:
-    # Update and install necessary tools
-    - apt-get update && apt-get install -y unzip lftp curl git
+    # Install necessary tools
+    - apt-get update && apt-get install -y unzip lftp git
     # Download and set up Composer with retries
     - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
     - chmod +x /usr/local/bin/composer
@@ -13,26 +13,31 @@ deploy:
     - echo "Installing Composer dependencies..."
     - composer install --no-dev --optimize-autoloader
 
-    # Fetch all branches to ensure we have the correct reference
+    # Ensure full git history is available
+    - echo "Fetching full Git history..."
+    - git fetch --unshallow || true
     - git fetch --all
 
     # Determine last deployed commit
     - echo "Determining last deployed commit..."
     - |
       if [ -f last-deployed-commit.txt ]; then
-        LAST_DEPLOYED_COMMIT=$(cat last-deployed-commit.txt);
-        echo "Last deployed commit: $LAST_DEPLOYED_COMMIT";
-        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD > changed-files.txt;
+        LAST_DEPLOYED_COMMIT=$(cat last-deployed-commit.txt)
+        echo "Last deployed commit: $LAST_DEPLOYED_COMMIT"
+        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD > changed-files.txt
       else
-        echo "No previous deployment found. Deploying all files...";
-        git diff --name-only HEAD > changed-files.txt;
+        echo "No previous deployment found. Deploying all files..."
+        find . -type f ! -name '*.git*' > changed-files.txt
       fi
 
     # Output changed files
     - echo "Changed files:"
     - cat changed-files.txt
 
-    # Upload only changed files
+    # Ensure there are files to upload
+    - if [ ! -s changed-files.txt ]; then echo "No changes detected. Exiting."; exit 0; fi
+
+    # Upload changed files
     - echo "Uploading changed files..."
     - |
       while read file; do
