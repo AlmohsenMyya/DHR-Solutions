@@ -10,22 +10,9 @@ deploy:
     - echo "Installing Composer dependencies..."
     - composer install --no-dev --optimize-autoloader
 
-    # Fetch all branches to ensure we have the correct reference
-    - git fetch --all
-
-    # Determine last deployed commit
-    - echo "Determining last deployed commit..."
-    - |
-      if [ -f last-deployed-commit.txt ]; then
-        LAST_DEPLOYED_COMMIT=$(cat last-deployed-commit.txt);
-        echo "Last deployed commit: $LAST_DEPLOYED_COMMIT";
-        git diff --name-only "$LAST_DEPLOYED_COMMIT" HEAD > changed-files.txt;
-      else
-        echo "No previous deployment found. Deploying all files...";
-        git diff --name-only HEAD > changed-files.txt;
-      fi
-
-    # Output changed files
+    # Identify changed files
+    - echo "Generating list of changed files..."
+    - git diff --name-only HEAD~1 > changed-files.txt
     - echo "Changed files:"
     - cat changed-files.txt
 
@@ -42,9 +29,5 @@ deploy:
         bye;
         "
       done < changed-files.txt
-
-    # Save the current commit as the last deployed commit
-    - echo "Saving the current commit as the last deployed commit..."
-    - git rev-parse HEAD > last-deployed-commit.txt
     - echo "Deployment completed successfully!"
   timeout: 1h
