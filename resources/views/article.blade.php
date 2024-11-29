@@ -33,7 +33,7 @@
 	                   <div class="blog_custom">
 	                      <div class="post-thumbnail">
 	                         <a href="{{URL::to('/')}}/post/{{$post->slug}}">
-	                            <img class="blog_post_image img-fluid lazy" width="800" height="550" src="{{ asset('img/loading-blog.gif') }}" data-src="{{$post->photo ?  asset('images/media/'. $post->photo->file) : }}" alt="{{$post->title}}">
+	                            <img class="blog_post_image img-fluid lazy" width="800" height="550" src="{{ asset('img/loading-blog.gif') }}" data-src="{{$post->photo ?  asset('images/media/'. $post->photo->file) : asset('img/200x200.png') }}" alt="{{$post->title}}">
 	                          </a>
 	                      </div>
 	                      <span class="post-date">{{ date('d.M.Y', strtotime($post->created_at)) }}</span>
