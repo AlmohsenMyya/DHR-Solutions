@@ -1,5 +1,5 @@
 @extends('layouts.front')
-
+//test ok
 @section('title') {{$homesetting->meta_title}} @endsection
 @section('meta') {{$homesetting->meta_description}} @endsection
 
@@ -10,22 +10,22 @@
 
     <div class="slider-venor-section">
         <div class="slider-venor owl-carousel">
-            
+
             @php $count = 0; @endphp
             @foreach( $sliders as $slido )
-            
+
             <div class="slider-inner-venor"  data-background-image-url="{{$slido->photo ? '/public/images/media/' . $slido->photo->file : '/public/img/200x200.png'}}">
-                
+
                 <div class="container">
-                   
+
                     <div class="slider-content">
                        <h1 @if( $count == 0 ) class="active" @endif>{!!$slido->heading1!!} </h1>
                        <h2 @if( $count == 0 ) class="active" @endif>{!!$slido->heading2!!}</h2>
 
-                     
+
 
                        <div class="slider-body  @if( $count == 0 ) active @endif">{!!$slido->bodyslider!!}</div>
-                       
+
                         @if($slido->button_text)
                             <div class="button-slider-b">
                                 <a href="{!!$slido->button_link!!}" target="_self" class="btn btn-slider"><span>{!!$slido->button_text!!}</span><svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg></a>
@@ -37,7 +37,7 @@
                                 <a href="{!!$slido->button_link2!!}" target="_self" class="btn btn-slider"><span>{!!$slido->button_text2!!}</span><svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg></a>
                             </div>
                         @endif
-                       
+
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
             @php $count++; @endphp
 
             @endforeach
-        
+
         </div>
 
         <div class="header-social-share">
@@ -55,15 +55,15 @@
         <a href="#" class="hero__scroll"><svg width="15" height="22.1"><use xlink:href="#scroll"></use></svg></a>
     </div>
 
-    
+
 
     <div class="about-section light-section">
         <div class="container">
             <div class="row">
-               
+
                 <div class="col-md-6">
-                    
-              
+
+
                     <div class="item-about">
 
                         <div class="item-about-row">
@@ -72,7 +72,7 @@
                                     <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image3_titlu1}}" data-tooltip-sub="{{$homesetting->about_image3_titlu2}}"><img src="/public/img/loading-blog.gif" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image3}}" alt="about-us" /></div>
                                 </div>
                             </div>
-                            
+
                             <div class="item-about-img1">
                                 <div class="avo-image avo-tooltip about-img1 big-paral">
                                     <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image2_titlu1}}" data-tooltip-sub="{{$homesetting->about_image2_titlu2}}"><img src="/public/img/loading-blog.gif" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image2}}" alt="about-us" /></div>
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                       
+
 
                         <div class="exp-about">
                             <h5 class="nmb-font-about">{{$homesetting->about_yearstitle}}</h5>
@@ -91,7 +91,7 @@
 
                     </div>
 
-                 
+
 
                 </div>
 
@@ -115,13 +115,13 @@
 
     <div class="services-section">
         <div class="container">
-            
+
             <h3>{!!$homesetting->services_title!!}</h3>
 
             <div class="description-services">{!!$homesetting->sevices_text!!}</div>
 
             <div class="service-boxes-slider owl-carousel">
-                
+
                 @foreach( $services as $service )
 
                 <div class="card-parent">
@@ -129,8 +129,8 @@
                         <div class="card featured to-top-left">
                             <div class="heading-wrapper">
                                 <h4 class="heading">{!!$service->icon!!} {{$service->title}}</h4>
-                            </div> 
-            
+                            </div>
+
                             <div class="paragraph-wrapper">
                                 <p class="paragraph">{{$service->description}}</p>
                             </div>
@@ -147,8 +147,8 @@
                 </div>
                 @endforeach
 
-            </div> 
-     
+            </div>
+
         </div>
     </div>
 
@@ -174,7 +174,7 @@
                         <span class="timer" data-from="0" data-to="{{$homesetting->count_number2}}" data-speed="4000">{{$homesetting->count_number2}}</span>
                         <h4>{{$homesetting->count_description2}}</h4>
                     </div>
-                    
+
                 </div>
                 <div class="col-md-3">
                     <div class="radial">
@@ -182,7 +182,7 @@
                         <span class="timer" data-from="0" data-to="{{$homesetting->count_number3}}" data-speed="4000">{{$homesetting->count_number3}}</span>
                         <h4>{{$homesetting->count_description3}}</h4>
                     </div>
-                    
+
                 </div>
                 <div class="col-md-3">
                     <div class="radial">
@@ -205,12 +205,12 @@
 
 
             <div class="portfolio-slider owl-carousel">
-                
+
                 @foreach($projects as $key=>$project)
-                    
+
                     <div class="portfolio-slider-inner">
-                
-                            <div class="project-box-div"> 
+
+                            <div class="project-box-div">
                                 @php $count = $key + 1 @endphp
                                 <a href="{{URL::to('/')}}/project/{{$project->slug}}" title="{{$project->title}}">
                                        <img class="img-fluid project-image lazy" width="400" height="400" src="/public/img/loading-blog.gif " data-src="{{$project->photo ? '/public/images/media/' . $project->photo->file : '/public/img/200x200.png'}}" alt="{{$project->title}}">
@@ -230,7 +230,7 @@
                                     </div>
                                 </div>
                             </div>
-                       
+
                     </div>
 
                     @if ($key == 3)
@@ -240,12 +240,12 @@
 
                 @endforeach
 
-            
+
             </div>
         </div>
     </div>
 
-    
+
 
 
     <div class="testimonial-section light-section">
@@ -315,7 +315,7 @@
                 </div>
                 @endforeach
 
-                
+
             </div>
 
         </div>

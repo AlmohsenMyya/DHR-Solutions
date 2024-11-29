@@ -2,18 +2,13 @@ deploy:
   stage: deploy
   image: php:8.2-cli
   before_script:
-    # Update package lists and install required tools
     - apt-get update && apt-get install -y unzip lftp
-    # Install Composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    # Enable the ext-exif PHP extension
     - docker-php-ext-install exif && docker-php-ext-enable exif
   script:
     - echo "Installing Composer dependencies..."
-    # Install production dependencies
     - composer install --no-dev --optimize-autoloader
     - echo "Starting deployment to FTP server $FTP_SERVER..."
-    # Deploy files using lftp with optimized settings to avoid unnecessary rewrites
     - |
       lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
@@ -23,7 +18,13 @@ deploy:
       set mirror:parallel-transfer-count 4;
       set mirror:use-cache true;
       set mirror:skip-noaccess true;
-      mirror --reverse --delete --only-newer --verbose ./ /public_html/dhr-solutions;
+      set mirror:use-permissions false;
+      set mirror:check-file-size true;
+      set cmd:trace true;
+      set log:enabled true;
+      set log:file lftp-deployment.log;
+      mirror --reverse --only-newer --verbose ./ /public_html/dhr-solutions;
       bye;
       "
     - echo "Deployment completed successfully!"
+
