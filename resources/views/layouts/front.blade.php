@@ -146,7 +146,12 @@
 
 
 
-     
+        body {
+                background: #001d12;
+            }
+            .pace-cover {
+                background: #001d12;
+            }
     
 
 </head>
