@@ -260,7 +260,7 @@
                 <blockquote class="testimonial-slide">
                     <div class="testimonial-layout1">
                         <div class="item-figure">
-                            <img class="img-fluid" width="90" height="90" src="{{$testimonial->profile_pic ? asset('media/'.$testimonial->profile_pic) : asset('img/200x200.png') }}" alt="">
+                            <img class="img-fluid" width="90" height="90" src="{{$testimonial->profile_pic ? $testimonial->profile_pic : asset('img/200x200.png') }}" alt="">
                         </div>
                         <div class="item-content">
                             <h3 class="item-title">{{$testimonial->name}}</h3>
