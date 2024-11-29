@@ -3,7 +3,7 @@ deploy:
   image: php:8.2-cli
   before_script:
     # Install necessary tools
-    - apt-get update && apt-get install -y unzip lftp
+    - apt-get update && apt-get install -y unzip lftp git
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - docker-php-ext-install exif && docker-php-ext-enable exif
   script:
