@@ -14,14 +14,15 @@ deploy:
     - composer install --no-dev --optimize-autoloader
     - echo "Starting deployment to FTP server $FTP_SERVER..."
     # Deploy files using lftp with optimized settings to avoid unnecessary rewrites
-    - lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
+    - |
+      lftp -d -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
       set ftp:ssl-force true;
       set ftp:ssl-protect-data true;
       set ftp:ssl-allow yes;
       set ssl:verify-certificate no;
-      set mirror:parallel-transfer-count 4;  # Transfer multiple files simultaneously
-      set mirror:use-cache true;  # Use cache to improve performance
-      set mirror:skip-noaccess true;  # Skip files that cannot be accessed
+      set mirror:parallel-transfer-count 4;
+      set mirror:use-cache true;
+      set mirror:skip-noaccess true;
       mirror --reverse --delete --only-newer --verbose ./ /public_html/dhr-solutions;
       bye;
       "
