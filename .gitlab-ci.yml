@@ -21,15 +21,14 @@ deploy:
     - echo "Uploading changed files..."
     - |
       while read file; do
-        # Create the directory structure on the server
+        # Suppress mkdir errors for existing directories
         lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
         set ftp:ssl-force true;
         set ftp:ssl-protect-data true;
         set ftp:ssl-allow yes;
         set ssl:verify-certificate no;
-        mkdir -p /public_html/dhr-solutions/$(dirname $file) || true;
-        bye;
-        "
+        mkdir -p /public_html/dhr-solutions/$(dirname $file); bye;
+        " || echo "Directory already exists: $(dirname $file)"
 
         # Upload the file to the correct directory
         lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
@@ -37,8 +36,7 @@ deploy:
         set ftp:ssl-protect-data true;
         set ftp:ssl-allow yes;
         set ssl:verify-certificate no;
-        put -O /public_html/dhr-solutions/$(dirname $file) $file;
-        bye;
+        put -O /public_html/dhr-solutions/$(dirname $file) $file; bye;
         "
       done < changed-files.txt
     - echo "Deployment completed successfully!"
