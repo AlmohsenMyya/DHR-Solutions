@@ -12,7 +12,7 @@ deploy:
   script:
     # Install Composer dependencies optimized for production
     - echo "Installing Composer dependencies..."
-    - composer update --no-dev --optimize-autoloader
+    - composer install --no-dev --optimize-autoloader
 
     # Generate the list of changed files
     - echo "Generating list of changed files..."
