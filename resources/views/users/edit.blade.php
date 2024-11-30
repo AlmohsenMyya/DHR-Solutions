@@ -39,7 +39,7 @@
                 <div class="row">
                 	<div class="col-md-3">
                 		<div class="img-container">
-                            <img class="img-fluid" src="{{$user->photo ? '/public/images/media/' . $user->photo->file : '/public/img/200x200.png'}}" alt="">
+                            <img class="img-fluid" src="{{$user->photo ? asset('images/media/'. $user->photo->file) : asset('img/200x200.png') }}" alt="">
                         </div>
                 	</div>
                 	<div class="col-md-9">

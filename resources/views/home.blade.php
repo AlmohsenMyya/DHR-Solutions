@@ -1,5 +1,4 @@
 @extends('layouts.front')
-//test ok 15
 @section('title') {{$homesetting->meta_title}} @endsection
 @section('meta') {{$homesetting->meta_description}} @endsection
 
@@ -14,7 +13,7 @@
             @php $count = 0; @endphp
             @foreach( $sliders as $slido )
 
-            <div class="slider-inner-venor"  data-background-image-url="{{$slido->photo ? '/public/images/media/' . $slido->photo->file : '/public/img/200x200.png'}}">
+            <div class="slider-inner-venor"  data-background-image-url="{{$slido->photo ? asset('images/media/'. $slido->photo->file)  : asset('img/200x200.png') }}">
 
                 <div class="container">
 
@@ -69,16 +68,16 @@
                         <div class="item-about-row">
                             <div class="item-about-img2">
                                 <div class="avo-image avo-tooltip about-img3 big-paral">
-                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image3_titlu1}}" data-tooltip-sub="{{$homesetting->about_image3_titlu2}}"><img src="/public/img/loading-blog.gif" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image3}}" alt="about-us" /></div>
+                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image3_titlu1}}" data-tooltip-sub="{{$homesetting->about_image3_titlu2}}"><img src="{{ asset('img/loading-blog.gif') }}" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image3}}" alt="about-us" /></div>
                                 </div>
                             </div>
 
                             <div class="item-about-img1">
                                 <div class="avo-image avo-tooltip about-img1 big-paral">
-                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image2_titlu1}}" data-tooltip-sub="{{$homesetting->about_image2_titlu2}}"><img src="/public/img/loading-blog.gif" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image2}}" alt="about-us" /></div>
+                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image2_titlu1}}" data-tooltip-sub="{{$homesetting->about_image2_titlu2}}"><img src="{{ asset('img/loading-blog.gif') }}" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image2}}" alt="about-us" /></div>
                                 </div>
                                 <div class="avo-image avo-tooltip about-img2 big-paral">
-                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image1_titlu1}}" data-tooltip-sub="{{$homesetting->about_image1_titlu2}}"><img src="/public/img/loading-blog.gif" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image1}}" alt="about-us" /></div>
+                                    <div class="simpleParallax imago" data-tooltip-tit="{{$homesetting->about_image1_titlu1}}" data-tooltip-sub="{{$homesetting->about_image1_titlu2}}"><img src="{{ asset('img/loading-blog.gif') }}" width="500" height="666" class="lazy thumparallax-down img-fluid" data-src="{{$homesetting->about_image1}}" alt="about-us" /></div>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +140,7 @@
 
                         </div>
                         <div class="card-img">
-                            <img class="img-fluid project-image lazy" width="400" height="400" src="/public/img/loading-blog.gif " data-src="{{$service->photo ? '/public/images/media/' . $service->photo->file : '/public/img/200x200.png'}}" alt="{{$service->title}}">
+                            <img class="img-fluid project-image lazy" width="400" height="400" src="{{ asset('img/loading-blog.gif') }} " data-src="{{$service->photo ? asset('images/media/'. $service->photo->file) : asset('img/200x200.png') }}" alt="{{$service->title}}">
                         </div>
                     </div>
                 </div>
@@ -213,7 +212,7 @@
                             <div class="project-box-div">
                                 @php $count = $key + 1 @endphp
                                 <a href="{{URL::to('/')}}/project/{{$project->slug}}" title="{{$project->title}}">
-                                       <img class="img-fluid project-image lazy" width="400" height="400" src="/public/img/loading-blog.gif " data-src="{{$project->photo ? '/public/images/media/' . $project->photo->file : '/public/img/200x200.png'}}" alt="{{$project->title}}">
+                                       <img class="img-fluid project-image lazy" width="400" height="400" src="{{ asset('img/loading-blog.gif') }} " data-src="{{$project->photo ? asset('images/media/'. $project->photo->file) : asset('img/200x200.png') }}" alt="{{$project->title}}">
                                 </a>
                                 <div class="project-meta">
                                     <div class="project-number">
@@ -261,7 +260,7 @@
                 <blockquote class="testimonial-slide">
                     <div class="testimonial-layout1">
                         <div class="item-figure">
-                            <img class="img-fluid" width="90" height="90" src="{{$testimonial->profile_pic ? $testimonial->profile_pic : '/public/img/200x200.png'}}" alt="">
+                            <img class="img-fluid" width="90" height="90" src="{{$testimonial->profile_pic ? $testimonial->profile_pic : asset('img/200x200.png') }}" alt="">
                         </div>
                         <div class="item-content">
                             <h3 class="item-title">{{$testimonial->name}}</h3>
@@ -292,7 +291,7 @@
                     <article class="blog-single-post">
 
                         <div class="after-bg">
-                           <img class="lazy blog_post_image img-fluid" width="370" height="380" src="https://cdn.dribbble.com/users/105033/screenshots/1132714/loading-animation-800.gif" data-src="{{$post->photo ? '/public/images/media/' . $post->photo->file : '/public/img/200x200.png'}}" alt="{{$post->title}}">
+                           <img class="lazy blog_post_image img-fluid" width="370" height="380" src="https://cdn.dribbble.com/users/105033/screenshots/1132714/loading-animation-800.gif" data-src="{{$post->photo ? asset('images/media/'. $post->photo->file) : asset('img/200x200.png') }}" alt="{{$post->title}}">
                         </div>
                         <div class="blog-item">
                            <div class="box-content p-relative">
