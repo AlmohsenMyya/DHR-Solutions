@@ -4,7 +4,7 @@ stages:
 deploy:
   stage: deploy
   before_script:
-    - apt-get update && apt-get install -y openssh-client
+    - apt-get update && apt-get install -y openssh-client unzip curl
     - echo "Starting SSH setup..."
     - eval "$(ssh-agent -s)"
     - echo "First few lines of SSH key:"
@@ -29,7 +29,31 @@ deploy:
       git remote set-url origin git@gitlab.com:BasharBadiiAli/dhr-solutions.git;
       fi;
       git pull origin main;
-      ' || echo "Git pull failed"
+
+      echo "Installing Composer dependencies...";
+      curl -sS https://getcomposer.org/installer | php;
+      php composer.phar install --no-dev --optimize-autoloader;
+
+      echo "Setting permissions...";
+      chmod -R 775 storage bootstrap/cache;
+      chown -R www-data:www-data storage bootstrap/cache;
+
+      echo "Running Laravel migrations...";
+      php artisan migrate --force;
+
+      echo "Clearing caches...";
+      php artisan config:clear;
+      php artisan cache:clear;
+      php artisan route:clear;
+      php artisan view:clear;
+
+      echo "Optimizing Laravel...";
+      php artisan config:cache;
+      php artisan route:cache;
+      php artisan view:cache;
+
+      echo "Deployment completed successfully.";
+      ' || echo "Deployment failed"
   only:
     - main
 
