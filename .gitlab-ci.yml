@@ -10,7 +10,7 @@ deploy:
     - main
 
 
-
+#.test
 #deploy:
 #  stage: deploy
 #  image: php:8.2-cli
