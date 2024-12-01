@@ -24,6 +24,9 @@ deploy:
       echo "Initializing Git repository...";
       git init;
       git remote add origin git@gitlab.com:BasharBadiiAli/dhr-solutions.git;
+      else
+      echo "Updating remote to use SSH...";
+      git remote set-url origin git@gitlab.com:BasharBadiiAli/dhr-solutions.git;
       fi;
       git pull origin main;
       ' || echo "Git pull failed"
