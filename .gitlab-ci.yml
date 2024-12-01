@@ -7,6 +7,7 @@ deploy:
     - apt-get update && apt-get install -y openssh-client
     - echo "Starting SSH setup..."
     - eval "$(ssh-agent -s)"
+    # طباعة أول وأسطر مفتاح SSH للتحقق من المحتوى
     - echo "First few lines of SSH key:"
     - echo "$dhr" | head -n 5 || echo "Failed to read SSH key"
     - echo "Adding SSH key to agent..."
@@ -18,15 +19,7 @@ deploy:
 
   script:
     - echo "Deploying to Hostinger..."
-    - ssh -o StrictHostKeyChecking=no -p 65002 u115544815@145.14.156.55 '
-      cd public_html/dhr || exit 1;
-      if [ ! -d .git ]; then
-      echo "Initializing Git repository...";
-      git init;
-      git remote add origin https://gitlab.com/BasharBadiiAli/dhr-solutions;
-      fi;
-      git pull origin main;
-      ' || echo "Git pull failed"
+    - ssh -o StrictHostKeyChecking=no -p 65002 u115544815@145.14.156.55 'cd public_html/dhr && git pull origin main' || echo "Git pull failed"
   only:
     - main
 
