@@ -1,43 +1,56 @@
+stages:
+  - deploy
+
 deploy:
   stage: deploy
-  image: php:8.2-cli
-  before_script:
-    # Install necessary tools
-    - apt-get update && apt-get install -y unzip lftp git
-    - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
-    - chmod +x /usr/local/bin/composer
-    - docker-php-ext-install exif && docker-php-ext-enable exif
   script:
-    - echo "Installing Composer dependencies..."
-    - composer install --no-dev --optimize-autoloader
+    - echo "Deploying to Hostinger..."
+    - ssh -o StrictHostKeyChecking=no -p 65002 u115544815@145.14.156.55 'cd public_html && git pull origin main'
+  only:
+    - main
 
-    # Identify changed files
-    - echo "Generating list of changed files..."
-    - git diff --name-only HEAD~1 > changed-files.txt
-    - echo "Changed files:"
-    - cat changed-files.txt
 
-    # Upload only changed files with correct directory structure
-    - echo "Uploading changed files..."
-    - |
-      while read file; do
-        # Suppress mkdir errors for existing directories
-        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-        set ftp:ssl-force true;
-        set ftp:ssl-protect-data true;
-        set ftp:ssl-allow yes;
-        set ssl:verify-certificate no;
-        mkdir -p /public_html/dhr-solutions/$(dirname $file); bye;
-        " || echo "Directory already exists: $(dirname $file)"
 
-        # Upload the file to the correct directory
-        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-        set ftp:ssl-force true;
-        set ftp:ssl-protect-data true;
-        set ftp:ssl-allow yes;
-        set ssl:verify-certificate no;
-        put -O /public_html/dhr-solutions/$(dirname $file) $file; bye;
-        "
-      done < changed-files.txt
-    - echo "Deployment completed successfully!"
-  timeout: 1h
+#deploy:
+#  stage: deploy
+#  image: php:8.2-cli
+#  before_script:
+#    # Install necessary tools
+#    - apt-get update && apt-get install -y unzip lftp git
+#    - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
+#    - chmod +x /usr/local/bin/composer
+#    - docker-php-ext-install exif && docker-php-ext-enable exif
+#  script:
+#    - echo "Installing Composer dependencies..."
+#    - composer install --no-dev --optimize-autoloader
+#
+#    # Identify changed files
+#    - echo "Generating list of changed files..."
+#    - git diff --name-only HEAD~1 > changed-files.txt
+#    - echo "Changed files:"
+#    - cat changed-files.txt
+#
+#    # Upload only changed files with correct directory structure
+#    - echo "Uploading changed files..."
+#    - |
+#      while read file; do
+#        # Suppress mkdir errors for existing directories
+#        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
+#        set ftp:ssl-force true;
+#        set ftp:ssl-protect-data true;
+#        set ftp:ssl-allow yes;
+#        set ssl:verify-certificate no;
+#        mkdir -p /public_html/dhr-solutions/$(dirname $file); bye;
+#        " || echo "Directory already exists: $(dirname $file)"
+#
+#        # Upload the file to the correct directory
+#        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
+#        set ftp:ssl-force true;
+#        set ftp:ssl-protect-data true;
+#        set ftp:ssl-allow yes;
+#        set ssl:verify-certificate no;
+#        put -O /public_html/dhr-solutions/$(dirname $file) $file; bye;
+#        "
+#      done < changed-files.txt
+#    - echo "Deployment completed successfully!"
+#  timeout: 1h
