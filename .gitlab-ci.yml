@@ -7,6 +7,10 @@ deploy:
     - apt-get update && apt-get install -y openssh-client
     - echo "Starting SSH setup..."
     - eval "$(ssh-agent -s)"
+    # طباعة أول وأسطر مفتاح SSH للتحقق من المحتوى
+    - echo "First few lines of SSH key:"
+    - echo "$dhr" | head -n 5 || echo "Failed to read SSH key"
+    - echo "Adding SSH key to agent..."
     - echo "$dhr" | tr -d '\r' | ssh-add - || echo "Failed to add SSH key"
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
