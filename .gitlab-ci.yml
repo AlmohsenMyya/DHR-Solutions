@@ -19,7 +19,7 @@ deploy:
   script:
     - echo "Deploying to Hostinger..."
     - ssh -o StrictHostKeyChecking=no -p 65002 u115544815@145.14.156.55 '
-      cd public_html/dhr || exit 1;
+      cd domains/dhr.sms-supply.com/public_html/dhr/ || exit 1;
       if [ ! -d .git ]; then
       echo "Initializing Git repository...";
       git init;
