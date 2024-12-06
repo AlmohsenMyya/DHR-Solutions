@@ -152,6 +152,14 @@
     </div>
 
 
+    <style>
+        .fun-facts-timer .timer::before {
+            content: '+';
+            font-weight: bold;
+            margin-right: 2px;
+        }
+    </style>
+
     <div class="fun-facts-section light-section" id="fun-facts">
         <div class="container">
 
@@ -163,30 +171,28 @@
                 <div class="col-md-3">
                     <div class="radial">
                         <div class="radial-icon">{!!$homesetting->count_icon1!!}</div>
-                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number1}}" data-speed="4000">+{{$homesetting->count_number1}}</span>
+                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number1}}" data-speed="4000">{{$homesetting->count_number1}}</span>
                         <h4>{{$homesetting->count_description1}}</h4>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="radial">
                         <div class="radial-icon">{!!$homesetting->count_icon2!!}</div>
-                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number2}}" data-speed="4000">+{{$homesetting->count_number2}}</span>
+                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number2}}" data-speed="4000">{{$homesetting->count_number2}}</span>
                         <h4>{{$homesetting->count_description2}}</h4>
                     </div>
-
                 </div>
                 <div class="col-md-3">
                     <div class="radial">
                         <div class="radial-icon">{!!$homesetting->count_icon3!!}</div>
-                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number3}}" data-speed="4000">+{{$homesetting->count_number3}}</span>
+                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number3}}" data-speed="4000">{{$homesetting->count_number3}}</span>
                         <h4>{{$homesetting->count_description3}}</h4>
                     </div>
-
                 </div>
                 <div class="col-md-3">
                     <div class="radial">
                         <div class="radial-icon">{!!$homesetting->count_icon4!!}</div>
-                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number4}}" data-speed="4000">+{{$homesetting->count_number4}}</span>
+                        <span class="timer" data-from="0" data-to="{{$homesetting->count_number4}}" data-speed="4000">{{$homesetting->count_number4}}</span>
                         <h4>{{$homesetting->count_description4}}</h4>
                     </div>
                 </div>
