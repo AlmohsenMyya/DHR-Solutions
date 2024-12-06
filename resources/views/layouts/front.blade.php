@@ -5,7 +5,7 @@
     @php $setting = App\Models\Setting::find($currentLang->id); @endphp
     <!-- Page Title -->
     <title>@yield('title')</title>
-    @if($setting->loader_status == 1) 
+    @if($setting->loader_status == 1)
         <script type="text/javascript">
             window.paceOptions = { ajax: false, restartOnRequestAfter: false, restartOnPushState: false};
         </script>
@@ -33,7 +33,7 @@
     <meta itemprop="name" content="@yield('title')">
     <meta itemprop="description" content="@yield('meta')">
     <meta itemprop="image" content="{{route('home')}}{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}">
-    
+
     @if($setting->OGgraph_switch == 1)
 
     <meta property="og:title" content="@yield('title')" />
@@ -42,7 +42,7 @@
     <meta property="og:image" content="{{route('home')}}{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}" />
     <meta property="og:site_name" content="{{$setting->author}}" />
     <meta property="og:description" content="@yield('meta')" />
-    
+
     @endif
 
     @if($setting->analytics_switch == 1)
@@ -56,7 +56,7 @@
 
         gtag('config', '{{$setting->analytics}}');
     </script>
-    
+
     @endif
 
     @if($setting->facebook_pixel_switch == 1)
@@ -78,9 +78,9 @@
     src="https://www.facebook.com/tr?id={{$setting->facebook_pixel}}&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
-    
+
     @endif
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{$setting->favicon}}" type="image/x-icon">
     <link rel="icon" href="{{$setting->favicon}}" type="image/x-icon">
@@ -88,16 +88,16 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
-    
-    @if($currentLang->rtl == 1) 
+
+    @if($currentLang->rtl == 1)
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    @else 
+    @else
         <link href="{{$setting->font}}" rel="stylesheet">
     @endif
 
-    @if($setting->maintenance_status == 0) 
+    @if($setting->maintenance_status == 0)
 
-        @if($setting->loader_status == 1) 
+        @if($setting->loader_status == 1)
             <script type='text/javascript' src="{{ asset('js/front/pace.min.js') }}" id='pace-js'></script>
             <script> setTimeout(function () {Pace.stop();},4500);</script>
         @endif
@@ -110,11 +110,11 @@
         <link href="{{ asset('css/front/owl.carousel.min.css')}}" type="text/css" rel="stylesheet">
         <link href="{{ asset('css/front/venor.css') }}" type="text/css" rel="stylesheet">
 
-     
+
 
         @yield('styles')
 
-        @if($currentLang->rtl == 1) 
+        @if($currentLang->rtl == 1)
             <link href="{{ asset('css/front/rtl.css') }}" type="text/css" rel="stylesheet">
         @endif
 
@@ -122,9 +122,9 @@
         <!-- Inline Styles -->
         <style>
             body {
-                @if($currentLang->rtl == 1) 
+                @if($currentLang->rtl == 1)
                     font-family: 'Cairo', sans-serif;
-                @else 
+                @else
                     font-family: 'Poppins', sans-serif;
                 @endif
             }
@@ -133,14 +133,14 @@
                 {!! $setting->custom_css !!}
             @endif
 
-            @if($setting->loader_status == 1) 
+            @if($setting->loader_status == 1)
                 .pace-cover {
                     background-image: url({!! $setting->loader_img !!});
                     background-color: {!! $setting->loader_color !!};
                 }
             @endif
 
-            
+
             body {
                 background: #001d12;
             }
@@ -152,29 +152,29 @@
 
 
 
-    
+
 
 </head>
 <body class="common-front @if($currentLang->rtl == 1) rtl @endif" @if($currentLang->rtl == 1) dir="rtl" @endif>
-    
-    @if($setting->maintenance_status == 1) 
+
+    @if($setting->maintenance_status == 1)
 
         <div class="maintenance_cls"><div class="maintenance_inner">{!!$setting->maintenance_text!!}</div></div>
 
     @endif
 
-    @if($setting->maintenance_status == 0) 
+    @if($setting->maintenance_status == 0)
 
     <!-- body -->
 
-    @if($setting->loader_status == 1) 
+    @if($setting->loader_status == 1)
     <div class="pace-cover"></div>
     @endif
 
 
     <header class="header">
 
-        
+
 
         <div class="header__content__venor">
             <div class="header__logo">
@@ -183,46 +183,46 @@
                 </a>
             </div>
 
-            <div class="header__actions__venor">
+{{--            <div class="header__actions__venor">--}}
 
-                @if($headerfooter->sidebar_title2)
-                <div class="header__action">
-                    <a  class="header__action-btn header__action-btn--start-project" href="{{$headerfooter->sidebar_description2}}">
-                        {{$headerfooter->sidebar_title2}} <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg>
-                    </a>
-                </div>
-                @endif
+{{--                @if($headerfooter->sidebar_title2)--}}
+{{--                <div class="header__action">--}}
+{{--                    <a  class="header__action-btn header__action-btn--start-project" href="{{$headerfooter->sidebar_description2}}">--}}
+{{--                        {{$headerfooter->sidebar_title2}} <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--                @endif--}}
 
-                @if($headerfooter->sidebar_title)
-                <div class="header__action">
-                    <a  class="header__action-btn header__action-btn--start-project" href="{{$headerfooter->sidebar_description}}">
-                        {{$headerfooter->sidebar_title}} <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg>
-                    </a>
-                </div>
-                @endif
+{{--                @if($headerfooter->sidebar_title)--}}
+{{--                <div class="header__action">--}}
+{{--                    <a  class="header__action-btn header__action-btn--start-project" href="{{$headerfooter->sidebar_description}}">--}}
+{{--                        {{$headerfooter->sidebar_title}} <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--                @endif--}}
 
 
-             
-                
-                <div class="header__lang">
+{{--             --}}
+{{--                --}}
+{{--                <div class="header__lang">--}}
 
-                    @if (!empty($currentLang) && count($langs) > 1)
-   
-                        <ul class="header__lang-list" >
-            
-                            @foreach ($langs as $key => $lang)
-                                
-                            <li @if ($currentLang->code == $lang->code) class="active" @endif><a title="{{$lang->name}}"  href='{{ route('changeLanguage', $lang->code) }}'><span>{{$lang->code}}</span></a></li>
-                            @endforeach
-                        </ul>
-                    @endif
+{{--                    @if (!empty($currentLang) && count($langs) > 1)--}}
+{{--   --}}
+{{--                        <ul class="header__lang-list" >--}}
+{{--            --}}
+{{--                            @foreach ($langs as $key => $lang)--}}
+{{--                                --}}
+{{--                            <li @if ($currentLang->code == $lang->code) class="active" @endif><a title="{{$lang->name}}"  href='{{ route('changeLanguage', $lang->code) }}'><span>{{$lang->code}}</span></a></li>--}}
+{{--                            @endforeach--}}
+{{--                        </ul>--}}
+{{--                    @endif--}}
 
-                </div>
+{{--                </div>--}}
 
-                
-            </div>
+{{--                --}}
+{{--            </div>--}}
 
-            
+
         </div>
     </header>
 
@@ -247,15 +247,15 @@
                             <ul class="header__nav">
 
                                 @foreach( $menus->sortBy('order') as $prod )
-                                   
+
                                     @if($prod->on_off_submenu == 1)
                                        <li class="header__nav-item dropdown">
                                             <a class="header__nav-link dropdown-toggle" href="{{$prod->link}}"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$prod->name}}
                                             </a>
                                             {!! $prod->submenu !!}
-                                           
+
                                         </li>
-                                    @else 
+                                    @else
                                          <li class="header__nav-item"> <a title="{{$prod->name}}" class="header__nav-link" href="{{$prod->link}}">{{$prod->name}}</a> </li>
                                     @endif
                                 @endforeach
@@ -302,7 +302,7 @@
                 </div>
             </div>
         </div>
-    </div>   
+    </div>
 
 
     <footer class="footer-section">
@@ -313,7 +313,7 @@
                         <div class="inner">
                             <span>{{$headerfooter->footer_col1_subtitle}}</span>
                             <h4>{{$headerfooter->footer_col1_title}}</h4>
-                            <a class="btn btn-style2" href="{{$headerfooter->footer_col1_buttonlink}}"> <span>{{$headerfooter->footer_col1_buttontext}}</span> <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg></a> 
+                            <a class="btn btn-style2" href="{{$headerfooter->footer_col1_buttonlink}}"> <span>{{$headerfooter->footer_col1_buttontext}}</span> <svg width="11.4" height="9.2"> <use xlink:href="#arrow"></use></svg></a>
                         </div>
                     </div>
                 </div>
@@ -360,7 +360,7 @@
             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
         </svg>
     </div>
-  
+
 
 
 
@@ -368,19 +368,19 @@
     @if($setting->SchmeaORG_switch == 1)
 
     <div class="hidden"  itemscope="" itemtype="https://schema.org/LocalBusiness">
-        <span itemprop="description">@yield('meta')</span> 
+        <span itemprop="description">@yield('meta')</span>
         <a itemprop="url" href="{{route('home')}}"> </a>
         <div itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
         <img src="{{route('home')}}{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}" alt="logo" width="120" itemprop="url"></div>
         <span itemprop="name">{{$setting->title}}</span>
         <em><span itemprop="priceRange">{{$setting->price_range}}</span></em>
-        <div itemprop="address" itemscope="" itemtype="https://schema.org/PostalAddress"> 
-            <span itemprop="addressLocality">{{$setting->address}}</span> | 
-            <span itemprop="addressCountry">{{$setting->country}}</span> | 
-            <span itemprop="telephone">{{$setting->phone}}</span> | 
+        <div itemprop="address" itemscope="" itemtype="https://schema.org/PostalAddress">
+            <span itemprop="addressLocality">{{$setting->address}}</span> |
+            <span itemprop="addressCountry">{{$setting->country}}</span> |
+            <span itemprop="telephone">{{$setting->phone}}</span> |
             <span itemprop="email">{{$setting->contact}}</span>
         </div>
-    </div> 
+    </div>
 
     @endif
 
@@ -390,7 +390,7 @@
         <svg class="chat" width="30.2" height="30.2"><use xlink:href="#chat"></use></svg>
     </a>
     @endif
-    
+
 
     <script src="{{ asset('js/libs/jquery.min.js') }}"></script>
     <script src="{{ asset('js/front/popper.min.js') }}"></script>
@@ -416,7 +416,7 @@
 
 
 
- 
+
 
     <script type="text/javascript">
     ( function ( $ ) {
