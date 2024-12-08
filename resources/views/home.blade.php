@@ -237,9 +237,9 @@
 
                     </div>
 
-                    @if ($key == 3)
-                        @break
-                    @endif
+{{--                    @if ($key == 3)--}}
+{{--                        @break--}}
+{{--                    @endif--}}
 
 
                 @endforeach
