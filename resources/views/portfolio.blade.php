@@ -6,8 +6,8 @@
 
 
 @section('content')
-  
-  
+
+
    <div class="banner-section" data-background-image-url="{{$portfoliosettings->banner_img ? $portfoliosettings->banner_img : asset('img/200x200.png') }}">
 
         <div class="container">
@@ -20,20 +20,20 @@
         </div>
 
         <a href="#" class="hero__scroll"><svg width="15" height="22.1"><use xlink:href="#scroll"></use></svg></a>
-       
+
    </div>
 
    <div class="portfolio-section-page light-section">
        <div class="projects-page-row">
 
-                      @php $count = 1; @endphp  
+                      @php $count = 1; @endphp
                       @foreach($projects as $project)
-        
+
 
                         <div class="project-row @php if($count % 2 == 0){ echo 'project-row-right'; } @endphp">
                             <div class="project_index">0.@php echo $count; @endphp  </div>
                             <div class="project__img">
-                              <img class="img-fluid thumparallax-down" width="900" height="938" src="{{$project->image_featured2}}">                
+                              <img class="img-fluid thumparallax-down" width="900" height="938" src="{{$project->image_featured2}}{{$count}}">
                             </div>
                             <div class="container">
                                 <div class="info-row__info">
@@ -50,14 +50,14 @@
                         </div>
 
 
-                        
-                        @php $count++; @endphp  
+
+                        @php $count++; @endphp
                         @endforeach
 
        </div>
    </div>
 
- 
+
 
 @endsection
 
