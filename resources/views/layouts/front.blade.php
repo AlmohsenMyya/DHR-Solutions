@@ -179,7 +179,7 @@
         <div class="header__content__venor">
             <div class="header__logo">
                 <a href="{{url('/')}}" title="{{$setting->title}}">
-                    <img width="500" height="500" class="img-fluid logo-front" src="{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}" alt="logo">
+                    <img width="105" height="22" class="img-fluid logo-front" src="{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}" alt="logo">
                 </a>
             </div>
 
