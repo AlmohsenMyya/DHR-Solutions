@@ -32,8 +32,8 @@ Author: Sweet Themes
           if(link == currentLocation) {
               $(this).addClass('active');
           }
-          
-     
+
+
       });
 
 		if (jQuery('.pace-cover').length) {
@@ -69,7 +69,7 @@ Author: Sweet Themes
 				sr.reveal('.project-number',{scale:1,duration:500,delay:350,reset: true});
 				sr.reveal('.project-category',{scale:1,duration:500,delay:400,reset: true});
 				sr.reveal('.project-meta-title',{scale:1,duration:500,delay:450,reset: true});
-				sr.reveal('.portfolio-section .project-button',{scale:1,duration:500,delay:500,reset: true});   
+				sr.reveal('.portfolio-section .project-button',{scale:1,duration:500,delay:500,reset: true});
 				sr.reveal('.portfolio-slider .owl-nav',{scale:1,duration:500,delay:600,reset: true});
 				sr.reveal('.portfolio-slider .owl-dots',{scale:1,duration:500,delay:650,reset: true});
 
@@ -81,7 +81,7 @@ Author: Sweet Themes
 				sr.reveal('.blog-section .blog-section-title',{scale:1,duration:500,delay:400,reset: true});
 				sr.reveal('.blog-section article.blog-single-post',{scale:1,duration:500,delay:500,reset: true});
 
-	
+
 
 				sr.reveal('.banner-section h1.banner-title',{scale:1,duration:500,delay:300,reset: true});
 				sr.reveal('.banner-section p.banner-desc',{scale:1,duration:500,delay:400,reset: true});
@@ -96,7 +96,7 @@ Author: Sweet Themes
 
 				sr.reveal('.clients-slider',{scale:1,duration:500,delay:50,reset: true});
 
-				
+
 			});
 		}
 
@@ -120,7 +120,7 @@ Author: Sweet Themes
 			$('.dropdown-menu').removeClass('show');
 		});
 
-    	
+
     	/* HOME SLIDE */
     	$(window).on("load", function() {
 		    $('body:not(.rtl) .slider-venor').owlCarousel({
@@ -373,7 +373,7 @@ Author: Sweet Themes
         jQuery('body').removeClass('menu-open');
         jQuery(this).removeClass('visible');
         jQuery('.side_panel_sidebar').removeClass('open-menu');
-    });    
+    });
 
     jQuery(document).on("keyup", function(e) {
          if (e.keyCode == 27) {
@@ -390,7 +390,7 @@ Author: Sweet Themes
 		progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
 		progressPath.style.strokeDashoffset = pathLength;
 		progressPath.getBoundingClientRect();
-		progressPath.style.transition = progressPath.style.WebkitTransition = 'stroke-dashoffset 10ms linear';		
+		progressPath.style.transition = progressPath.style.WebkitTransition = 'stroke-dashoffset 10ms linear';
 		var updateProgress = function () {
 			var scroll = $(window).scrollTop();
 			var height = $(document).height() - $(window).height();
@@ -398,7 +398,7 @@ Author: Sweet Themes
 			progressPath.style.strokeDashoffset = progress;
 		}
 		updateProgress();
-		$(window).scroll(updateProgress);	
+		$(window).scroll(updateProgress);
 		var offset = 50;
 		var duration = 550;
 		jQuery(window).on('scroll', function() {
@@ -407,13 +407,13 @@ Author: Sweet Themes
 			} else {
 				jQuery('.progress-wrap').removeClass('active-progress');
 			}
-		});				
+		});
 		jQuery('.progress-wrap').on('click', function(event) {
 			event.preventDefault();
 			jQuery('html, body').animate({scrollTop: 0}, duration);
 			return false;
 		})
-		
+
 		/* CLIENTS */
 		$('body:not(.rtl) .clients-slider').owlCarousel({
 			loop:true,
@@ -491,18 +491,18 @@ Author: Sweet Themes
 
 
       jQuery(window).on("scroll", function() {
-          (jQuery(window).scrollTop() > 250 && jQuery(window).width() > 1200 && (
-              jQuery("body").addClass("sticky"), 
+          (jQuery(window).scrollTop() > 1000 && jQuery(window).width() > 1200 && (
+              jQuery("body").addClass("sticky"),
               jQuery(".header-burger .burger").addClass("animated fadeInDown"),
               jQuery(".header__content__venor").addClass("animated fadeInDown"
-          )),           
-          jQuery(window).scrollTop() < 250 && (jQuery("body").removeClass("sticky"), 
+          )),
+          jQuery(window).scrollTop() < 250 && (jQuery("body").removeClass("sticky"),
           	jQuery(".header-burger .burger").removeClass("animated fadeInDown"),
       	   jQuery(".header__content__venor").removeClass("animated fadeInDown")))
-     
+
       }), jQuery(window).resize(function() {
           jQuery(window).width() < 1200 && jQuery("body").removeClass("sticky") });
-  
+
 
     })
 } ( jQuery ) )
@@ -572,7 +572,7 @@ Author: Sweet Themes
           };
         }
       ;
-    // Array.prototype.slice.call is not callable under our lovely IE8 
+    // Array.prototype.slice.call is not callable under our lovely IE8
     for (var i = 0; i < query.length; i++) {
       images.push(query[i]);
     };
@@ -582,7 +582,7 @@ Author: Sweet Themes
 
 }(this);
 
-		
+
 
 function BackgroundNode({node, loadedClassName}) {
 	let src = node.getAttribute('data-background-image-url');
@@ -622,14 +622,14 @@ function BackgroundLazyLoader({selector, loadedClassName} = defaultOptions) {
 			}
 
 			let obj = nodes.find(it => it.node.isSameNode(target));
-			
+
 			if (obj) {
 				obj.load(() => {
 					// Unobserve the node:
 					observer.unobserve(target);
 					// Remove this node from our list:
 					nodes = nodes.filter(n => !n.node.isSameNode(target));
-					
+
 					// If there are no remaining unloaded nodes,
 					// disconnect the observer since we don't need it anymore.
 					if (!nodes.length) {
@@ -639,7 +639,7 @@ function BackgroundLazyLoader({selector, loadedClassName} = defaultOptions) {
 			}
 		})
 	};
-	
+
 	let observer = new IntersectionObserver(callback);
 	nodes.forEach(node => observer.observe(node.node));
 };
