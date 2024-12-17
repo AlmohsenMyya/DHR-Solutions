@@ -192,7 +192,7 @@ strong {
     height: 40px;
 }
 .header__logo img {
-    width: 160px !important; /* التعديل حسب الحجم الذي تريده */
+    width: 110px !important; /* التعديل حسب الحجم الذي تريده */
     height: auto !important; /* الحفاظ على نسبة الأبعاد */
     max-width: 100% !important;
     display: block;
@@ -201,6 +201,7 @@ strong {
     opacity: 1 !important;
     transform: none !important;
     align-items: self-end;
+    margin-top: 43px;
 }
 
 
