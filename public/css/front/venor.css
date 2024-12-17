@@ -200,7 +200,7 @@ strong {
     -webkit-filter: none !important;
     opacity: 1 !important;
     transform: none !important;
-    align-items: self-start;
+    align-items: self-end;
 }
 
 
