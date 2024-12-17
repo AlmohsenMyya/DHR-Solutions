@@ -176,7 +176,7 @@
 
 
         <div class="header__content__venor">
-            <div class="header__logo">
+            <div class="header__logo" >
                 <a href="{{url('/')}}" title="{{$setting->title}}">
                     <img width="200" height="200"
                          src="{{$setting->photo ? asset('images/media/'. $setting->photo->file) : asset('img/200x200.png') }}"
