@@ -18,6 +18,7 @@ dependencies:
   image: composer:latest
   script:
     - echo "Installing PHP dependencies using Composer..."
+    - docker-php-ext-install exif
     - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
     - echo "PHP dependencies installed successfully."
   artifacts:
@@ -64,7 +65,7 @@ deploy:
     - echo "Starting deployment via FTP..."
     - lftp -c "
       open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
-      mirror --reverse --delete --verbose ./ ;
+      mirror --reverse --delete --verbose ./ ${FTP_TARGET_DIR};
       "
     - echo "Deployment completed successfully."
   only:
