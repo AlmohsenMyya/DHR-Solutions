@@ -33,6 +33,8 @@ build:
     - npm install
     - echo "Installing Webpack globally..."
     - npm install --global webpack webpack-cli
+    - echo "Installing missing dependencies for Mix..."
+    - npm install resolve-url-loader@^5.0.0 --save-dev --legacy-peer-deps
     - echo "Building assets for production..."
     - npx mix --production
     - echo "Assets built successfully."
