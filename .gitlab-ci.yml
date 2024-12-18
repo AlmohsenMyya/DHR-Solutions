@@ -1,9 +1,3 @@
-stages:
-  - dependencies
-  - build
-  - migrate
-  - deploy
-
 cache:
   paths:
     - vendor/
@@ -12,6 +6,18 @@ cache:
 before_script:
   - export COMPOSER_ALLOW_SUPERUSER=1
   - export PATH="$PATH:/usr/local/bin"
+
+services:
+  - name: mysql:8.0
+    alias: db
+
+variables:
+  MYSQL_DATABASE: dhrsolut_almohsen
+  MYSQL_USER:
+  MYSQL_PASSWORD:
+  MYSQL_ROOT_PASSWORD:
+  DB_HOST: db
+  DB_PORT: 3306
 
 dependencies:
   stage: dependencies
@@ -50,6 +56,8 @@ migrate:
   before_script:
     - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
     - docker-php-ext-install pdo_mysql
+    - echo "Waiting for MySQL to be ready..."
+    - sleep 30  # انتظر MySQL ليصبح جاهزًا
   script:
     - echo "Running migrations..."
     - php artisan migrate --force
