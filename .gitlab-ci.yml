@@ -1,132 +1,77 @@
-#stages:
-#  - deploy
-#
-#deploy:
-#  stage: deploy
-#  before_script:
-#    - apt-get update && apt-get install -y openssh-client unzip curl
-#    - echo "Starting SSH setup..."
-#    - eval "$(ssh-agent -s)"
-#    - echo "First few lines of SSH key:"
-#    - echo "$dhr" | head -n 5 || echo "Failed to read SSH key"
-#    - echo "Adding SSH key to agent..."
-#    - echo "$dhr" | tr -d '\r' | ssh-add - || echo "Failed to add SSH key"
-#    - mkdir -p ~/.ssh
-#    - echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-#    - echo "Testing SSH connection..."
-#    - ssh -p 65002 u115544815@145.14.156.55 echo "SSH Connection Successful" || echo "SSH connection failed"
-#
-#  script:
-#    - echo "Deploying to Hostinger..."
-#    - ssh -o StrictHostKeyChecking=no -p 65002 u115544815@145.14.156.55 '
-#      cd domains/dhr.sms-supply.com/public_html/ || exit 1;
-#      if [ ! -d .git ]; then
-#      echo "Initializing Git repository...";
-#      git init;
-#      git remote add origin git@gitlab.com:BasharBadiiAli/dhr-solutions.git;
-#      else
-#      echo "Updating remote to use SSH...";
-#      git remote set-url origin git@gitlab.com:BasharBadiiAli/dhr-solutions.git;
-#      fi;
-#      git pull origin main;
-#
-#      echo "Installing Composer dependencies...";
-#      curl -sS https://getcomposer.org/installer | php;
-#      php composer.phar install --no-dev --optimize-autoloader;
-#
-#      echo "Setting permissions...";
-#      chmod -R 775 storage bootstrap/cache;
-#      chown -R www-data:www-data storage bootstrap/cache;
-#
-#      echo "Running Laravel migrations...";
-#      php artisan migrate --force;
-#
-#      echo "Clearing caches...";
-#      php artisan config:clear;
-#      php artisan cache:clear;
-#      php artisan route:clear;
-#      php artisan view:clear;
-#
-#      echo "Optimizing Laravel...";
-#      php artisan config:cache;
-#      php artisan route:cache;
-#      php artisan view:cache;
-#
-#      echo "Deployment completed successfully.";
-#      ' || echo "Deployment failed"
-#  only:
-#    - main
+stages:
+  - dependencies
+  - build
+  - test
+  - migrate
+  - deploy
 
-#.test 7 مقارنة الملفات
+cache:
+  paths:
+    - vendor/
+    - node_modules/
+
+variables:
+  FTP_HOST: "77,245,159,131"
+  FTP_USERNAME: "mohsen@dhr-solutions.com"
+  FTP_PASSWORD: "mohsen@2024"
+  FTP_ROOT: "" # Example: /var/www/html
+  COMPOSER_ALLOW_SUPERUSER: 1
+  NODE_ENV: "production"
+
+before_script:
+  - echo "Starting pipeline..."
+  - echo "Setting up environment variables..."
+
+dependencies:
+  stage: dependencies
+  image: composer:latest
+  script:
+    - echo "Installing PHP dependencies using Composer..."
+    - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
+  artifacts:
+    paths:
+      - vendor/
+
+build:
+  stage: build
+  image: node:latest
+  script:
+    - echo "Installing Node.js dependencies..."
+    - npm install
+    - echo "Building assets for production..."
+    - npm run prod
+  artifacts:
+    paths:
+      - public/js/
+      - public/css/
+      - public/mix-manifest.json
+
+test:
+  stage: test
+  image: php:8.2-cli
+  script:
+    - echo "Running Laravel tests..."
+    - vendor/bin/phpunit --testdox
+
+migrate:
+  stage: migrate
+  image: php:8.2-cli
+  script:
+    - echo "Caching Laravel configuration..."
+    - php artisan config:cache
+    - echo "Caching Laravel routes..."
+    - php artisan route:cache
+    - echo "Caching Laravel views..."
+    - php artisan view:cache
+    - echo "Running migrations..."
+    - php artisan migrate --force
+
 deploy:
   stage: deploy
-  image: php:8.2-cli
-  before_script:
-    # Install necessary tools
-    - apt-get update && apt-get install -y unzip lftp git
-    - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
-    - chmod +x /usr/local/bin/composer
-    - docker-php-ext-install exif && docker-php-ext-enable exif
+  image: alpine:latest
   script:
-    - echo "Installing Composer dependencies..."
-    - composer install --no-dev --optimize-autoloader
-
-    # Identify changed files
-    - echo "Generating list of changed files..."
-    - git diff --name-only HEAD~1 > changed-files.txt
-    - echo "Changed files:"
-    - cat changed-files.txt
-
-    # Upload only changed files with correct directory structure
-    - echo "Uploading changed files..."
-    - |
-      while read file; do
-        # Suppress mkdir errors for existing directories
-        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-        set ftp:ssl-force true;
-        set ftp:ssl-protect-data true;
-        set ftp:ssl-allow yes;
-        set ssl:verify-certificate no;
-        mkdir -p /public_html/$(dirname $file); bye;
-        " || echo "Directory already exists: $(dirname $file)"
-
-        # Upload the file to the correct directory
-        lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-        set ftp:ssl-force true;
-        set ftp:ssl-protect-data true;
-        set ftp:ssl-allow yes;
-        set ssl:verify-certificate no;
-        put -O /public_html/dhr-solutions/$(dirname $file) $file; bye;
-        "
-      done < changed-files.txt
-    - echo "Deployment completed successfully!"
-  timeout: 3h
-
-
-#رفع دفعة واحدة
-#deploy:
-#  stage: deploy
-#  image: php:8.2-cli
-#  before_script:
-#    # Install necessary tools
-#    - apt-get update && apt-get install -y unzip lftp git
-#    - curl -sS --retry 3 --retry-delay 5 https://getcomposer.org/composer.phar -o /usr/local/bin/composer
-#    - chmod +x /usr/local/bin/composer
-#    - docker-php-ext-install exif && docker-php-ext-enable exif
-#  script:
-#    - echo "Installing Composer dependencies..."
-#    - composer install --no-dev --optimize-autoloader
-#
-#    # رفع الملفات بالكامل
-#    - echo "Uploading all files to the server..."
-#    - |
-#      lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" -e "
-#      set ftp:ssl-force true;
-#      set ftp:ssl-protect-data true;
-#      set ftp:ssl-allow yes;
-#      set ssl:verify-certificate no;
-#      mirror --reverse --delete --verbose ./ /public_html/dhr-solutions/;
-#      bye;
-#      "
-#    - echo "Deployment completed successfully!"
-#  timeout: 1h
+    - echo "Starting deployment via FTP..."
+    - apk add --no-cache lftp
+    - echo "Uploading files to FTP server..."
+    - lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -R --delete --verbose ./ $FTP_ROOT"
+    - echo "Deployment completed."
