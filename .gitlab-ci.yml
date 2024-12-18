@@ -36,10 +36,12 @@ dependencies:
 
 build:
   stage: build
-  image: node:latest
+  image: node:16-alpine
   script:
     - echo "Installing Node.js dependencies..."
     - npm install
+    - echo "Installing Laravel Mix globally..."
+    - npm install --global laravel-mix
     - echo "Building assets for production..."
     - npm run prod
   artifacts:
