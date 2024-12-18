@@ -1,3 +1,8 @@
+stages:
+  - dependencies
+  - build
+  - migrate
+  - deploy
 cache:
   paths:
     - vendor/
