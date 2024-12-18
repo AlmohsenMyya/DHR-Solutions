@@ -26,6 +26,8 @@ dependencies:
   stage: dependencies
   image: composer:latest
   script:
+    - echo "Installing required PHP extensions..."
+    - docker-php-ext-install exif
     - echo "Installing PHP dependencies using Composer..."
     - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
   artifacts:
