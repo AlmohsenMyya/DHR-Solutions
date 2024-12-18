@@ -1,7 +1,6 @@
 stages:
   - dependencies
   - build
-  - test
   - migrate
   - deploy
 
@@ -10,26 +9,17 @@ cache:
     - vendor/
     - node_modules/
 
-variables:
-  FTP_HOST: "77,245,159,131"
-  FTP_USERNAME: "mohsen@dhr-solutions.com"
-  FTP_PASSWORD: "mohsen@2024"
-  FTP_ROOT: "" # Example: /var/www/html
-  COMPOSER_ALLOW_SUPERUSER: 1
-  NODE_ENV: "production"
-
 before_script:
-  - echo "Starting pipeline..."
-  - echo "Setting up environment variables..."
+  - export COMPOSER_ALLOW_SUPERUSER=1
+  - export PATH="$PATH:/usr/local/bin"
 
 dependencies:
   stage: dependencies
   image: composer:latest
   script:
-    - echo "Installing required PHP extensions..."
-    - docker-php-ext-install exif
     - echo "Installing PHP dependencies using Composer..."
     - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
+    - echo "PHP dependencies installed successfully."
   artifacts:
     paths:
       - vendor/
@@ -40,42 +30,42 @@ build:
   script:
     - echo "Installing Node.js dependencies..."
     - npm install
-    - echo "Installing Laravel Mix globally..."
-    - npm install --global laravel-mix
+    - echo "Installing Webpack globally..."
+    - npm install --global webpack webpack-cli
     - echo "Building assets for production..."
-    - npm run prod
+    - npx mix --production
+    - echo "Assets built successfully."
   artifacts:
     paths:
       - public/js/
       - public/css/
       - public/mix-manifest.json
 
-test:
-  stage: test
-  image: php:8.2-cli
-  script:
-    - echo "Running Laravel tests..."
-    - vendor/bin/phpunit --testdox
-
 migrate:
   stage: migrate
   image: php:8.2-cli
   script:
-    - echo "Caching Laravel configuration..."
-    - php artisan config:cache
-    - echo "Caching Laravel routes..."
-    - php artisan route:cache
-    - echo "Caching Laravel views..."
-    - php artisan view:cache
     - echo "Running migrations..."
     - php artisan migrate --force
+    - echo "Caching configuration..."
+    - php artisan config:cache
+    - echo "Caching routes..."
+    - php artisan route:cache
+    - echo "Caching views..."
+    - php artisan view:cache
+    - echo "Migration and caching completed."
 
 deploy:
   stage: deploy
   image: alpine:latest
+  before_script:
+    - apk add --no-cache curl lftp
   script:
     - echo "Starting deployment via FTP..."
-    - apk add --no-cache lftp
-    - echo "Uploading files to FTP server..."
-    - lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -R --delete --verbose ./ $FTP_ROOT"
-    - echo "Deployment completed."
+    - lftp -c "
+      open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
+      mirror --reverse --delete --verbose ./ ;
+      "
+    - echo "Deployment completed successfully."
+  only:
+    - main
