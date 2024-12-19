@@ -55,24 +55,24 @@ build:
       - public/css/
       - public/mix-manifest.json
 
-migrate:
-  stage: migrate
-  image: php:8.2-cli
-  before_script:
-    - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
-    - docker-php-ext-install pdo_mysql
-    - echo "Waiting for MySQL to be ready..."
-    - sleep 30  # انتظر MySQL ليصبح جاهزًا
-  script:
-    - echo "Running migrations..."
-    - php artisan migrate --force
-    - echo "Caching configuration..."
-    - php artisan config:cache
-    - echo "Caching routes..."
-    - php artisan route:cache
-    - echo "Caching views..."
-    - php artisan view:cache
-    - echo "Migration and caching completed."
+#migrate:
+#  stage: migrate
+#  image: php:8.2-cli
+#  before_script:
+#    - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
+#    - docker-php-ext-install pdo_mysql
+#    - echo "Waiting for MySQL to be ready..."
+#    - sleep 30  # انتظر MySQL ليصبح جاهزًا
+#  script:
+#    - echo "Running migrations..."
+#    - php artisan migrate --force
+#    - echo "Caching configuration..."
+#    - php artisan config:cache
+#    - echo "Caching routes..."
+#    - php artisan route:cache
+#    - echo "Caching views..."
+#    - php artisan view:cache
+#    - echo "Migration and caching completed."
 
 deploy:
   stage: deploy
