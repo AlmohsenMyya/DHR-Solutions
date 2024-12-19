@@ -1,79 +1,79 @@
 stages:
-#  - dependencies
-#  - build
-##  - migrate
+  - dependencies
+  - build
+#  - migrate
   - deploy
 
-#cache:
-#  paths:
-#    - vendor/
-#    - node_modules/
-#
-#before_script:
-#  - export COMPOSER_ALLOW_SUPERUSER=1
-#  - export PATH="$PATH:/usr/local/bin"
-#
-#services:
-#  - name: mysql:8.0
-#    alias: db
-#
-#variables:
-#  MYSQL_DATABASE: dhrsolut_almohsen
-#  MYSQL_USER:
-#  MYSQL_PASSWORD:
-#  MYSQL_ROOT_PASSWORD:
-#  DB_HOST: db
-#  DB_PORT: 3306
-#
-#dependencies:
-#  stage: dependencies
-#  image: composer:latest
+cache:
+  paths:
+    - vendor/
+    - node_modules/
+
+before_script:
+  - export COMPOSER_ALLOW_SUPERUSER=1
+  - export PATH="$PATH:/usr/local/bin"
+
+services:
+  - name: mysql:8.0
+    alias: db
+
+variables:
+  MYSQL_DATABASE: dhrsolut_almohsen
+  MYSQL_USER:
+  MYSQL_PASSWORD:
+  MYSQL_ROOT_PASSWORD:
+  DB_HOST: db
+  DB_PORT: 3306
+
+dependencies:
+  stage: dependencies
+  image: composer:latest
+  script:
+    - echo "Installing PHP dependencies using Composer..."
+    - docker-php-ext-install exif
+    - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
+    - echo "PHP dependencies installed successfully."
+  artifacts:
+    paths:
+      - vendor/
+
+build:
+  stage: build
+  image: node:16-alpine
+  script:
+    - echo "Installing Node.js dependencies..."
+    - npm install
+    - echo "Installing Webpack globally..."
+    - npm install --global webpack webpack-cli
+    - echo "Installing missing dependencies for Mix..."
+    - npm install resolve-url-loader@^5.0.0 --save-dev --legacy-peer-deps
+    - echo "Building assets for production..."
+    - npx mix --production
+    - echo "Assets built successfully."
+  artifacts:
+    paths:
+      - public/js/
+      - public/css/
+      - public/mix-manifest.json
+
+#migrate:
+#  stage: migrate
+#  image: php:8.2-cli
+#  before_script:
+#    - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
+#    - docker-php-ext-install pdo_mysql
+#    - echo "Waiting for MySQL to be ready..."
+#    - sleep 30
 #  script:
-#    - echo "Installing PHP dependencies using Composer..."
-#    - docker-php-ext-install exif
-#    - composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
-#    - echo "PHP dependencies installed successfully."
-#  artifacts:
-#    paths:
-#      - vendor/
-#
-#build:
-#  stage: build
-#  image: node:16-alpine
-#  script:
-#    - echo "Installing Node.js dependencies..."
-#    - npm install
-#    - echo "Installing Webpack globally..."
-#    - npm install --global webpack webpack-cli
-#    - echo "Installing missing dependencies for Mix..."
-#    - npm install resolve-url-loader@^5.0.0 --save-dev --legacy-peer-deps
-#    - echo "Building assets for production..."
-#    - npx mix --production
-#    - echo "Assets built successfully."
-#  artifacts:
-#    paths:
-#      - public/js/
-#      - public/css/
-#      - public/mix-manifest.json
-#
-##migrate:
-##  stage: migrate
-##  image: php:8.2-cli
-##  before_script:
-##    - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
-##    - docker-php-ext-install pdo_mysql
-##    - echo "Waiting for MySQL to be ready..."
-##    - sleep 30
-##  script:
-##    - echo "Running migrations..."
-##    - php artisan migrate --force
-##    - echo "Caching configuration..."
-##    - php artisan config:cache
-##    - echo "Caching routes..."
-##    - php artisan route:cache
-##    - echo "Caching views..."
-##    - php artisan view:cache
-##    - echo "Migration and caching completed."
+#    - echo "Running migrations..."
+#    - php artisan migrate --force
+#    - echo "Caching configuration..."
+#    - php artisan config:cache
+#    - echo "Caching routes..."
+#    - php artisan route:cache
+#    - echo "Caching views..."
+#    - php artisan view:cache
+#    - echo "Migration and caching completed."
 
 deploy:
   stage: deploy

@@ -1,0 +1,87 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  dependencies:
+    name: Install PHP Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: exif
+
+      - name: Install Composer Dependencies
+        run: |
+          composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+  build:
+    name: Build Assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Node.js Dependencies
+        run: |
+          npm install
+          npm install --global webpack webpack-cli
+          npm install resolve-url-loader@^5.0.0 --save-dev --legacy-peer-deps
+
+      - name: Build Assets
+        run: npx mix --production
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            public/js/
+            public/css/
+            public/mix-manifest.json
+
+  deploy:
+    name: Deploy via FTP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+
+      - name: Deploy Files to FTP Server
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "
+            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
+            echo 'Connected to FTP server.';
+            echo 'Listing remote directory before upload...';
+            ls;
+            echo 'Starting upload...';
+            mirror --reverse --delete --verbose ./ /remote_target_directory;
+            echo 'Upload completed.';
+          "
