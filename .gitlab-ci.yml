@@ -83,7 +83,7 @@ deploy:
     - echo "Starting deployment via FTP..."
     - lftp -c "
       open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
-      mirror --reverse --delete --verbose ./ ${FTP_TARGET_DIR};
+      mirror --reverse --delete --verbose ./public_html/;
       "
     - echo "Deployment completed successfully."
   only:
