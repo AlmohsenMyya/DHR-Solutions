@@ -3,6 +3,7 @@ stages:
   - build
   - migrate
   - deploy
+
 cache:
   paths:
     - vendor/
@@ -62,7 +63,7 @@ build:
 #    - apt-get update && apt-get install -y libpq-dev libzip-dev zip unzip
 #    - docker-php-ext-install pdo_mysql
 #    - echo "Waiting for MySQL to be ready..."
-#    - sleep 30  # انتظر MySQL ليصبح جاهزًا
+#    - sleep 30
 #  script:
 #    - echo "Running migrations..."
 #    - php artisan migrate --force
@@ -81,9 +82,15 @@ deploy:
     - apk add --no-cache curl lftp
   script:
     - echo "Starting deployment via FTP..."
+    - echo "FTP Server: ${FTP_SERVER}"
+    - echo "FTP Username: ${FTP_USERNAME}"
+    - echo "Connecting to FTP..."
     - lftp -c "
       open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
+      echo 'Connected to FTP server.';
+      echo 'Starting upload...';
       mirror --reverse --delete --verbose ./;
+      echo 'Upload completed.';
       "
     - echo "Deployment completed successfully."
   only:
