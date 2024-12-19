@@ -82,8 +82,6 @@ deploy:
     - apk add --no-cache curl lftp
   script:
     - echo "Starting deployment via FTP..."
-    - echo "FTP Server: ${FTP_SERVER}"
-    - echo "FTP Username: ${FTP_USERNAME}"
     - echo "Connecting to FTP..."
     - lftp -c "
       open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
