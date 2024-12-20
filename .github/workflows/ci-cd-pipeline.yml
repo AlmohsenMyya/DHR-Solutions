@@ -16,11 +16,13 @@ jobs:
 
       - name: Prepare Environment
         run: |
-          echo "Starting deployment process..."
+          echo "====================================="
+          echo "Preparing environment for deployment..."
           sudo apt-get update
           echo "Installing lftp..."
           sudo apt-get install -y lftp
-          echo "Environment setup completed."
+          echo "Environment setup completed successfully."
+          echo "====================================="
 
       - name: Deploy Files to FTP Server
         env:
@@ -28,21 +30,36 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
         run: |
+          echo "====================================="
+          echo "Starting FTP Deployment Process..."
           echo "Connecting to FTP server: ${FTP_SERVER}"
           echo "Using FTP username: ${FTP_USERNAME}"
           echo "====================================="
-          lftp -d -c "
-            set ssl:verify-certificate no;
-            set ftp:passive-mode yes;
-            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
-            echo 'Successfully connected to FTP server.';
-            echo 'Listing remote directory...';
-#            ls;
-            echo 'Uploading files...';
-            mirror --reverse --delete --verbose ./ /remote_target_directory;
-            echo 'Upload completed successfully.';
-            "
 
+          lftp -d -c "
+            echo '--- Setting FTP options...';
+            set ssl:verify-certificate no;  # تعطيل التحقق من الشهادات (اختياري)
+            set ftp:passive-mode yes;       # استخدام الوضع السلبي للاتصال
+            set net:timeout 60;             # ضبط وقت المهلة
+            echo '--- Connecting to server...';
+            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
+
+            echo '--- Connected to FTP server.';
+            echo '--- Listing remote directory...';
+            ls;
+
+            echo '--- Starting file upload...';
+            mirror --reverse --delete --verbose ./ /remote_target_directory;
+
+            echo '--- Upload completed successfully.';
+          "
+
+          if [ $? -ne 0 ]; then
+            echo "Error: Deployment failed."
+            exit 1
+          else
+            echo "Deployment completed successfully."
+          fi
 
 
 #name: CI/CD Pipeline
