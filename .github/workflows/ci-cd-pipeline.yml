@@ -37,7 +37,7 @@ jobs:
             open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
             echo 'Successfully connected to FTP server.';
             echo 'Listing remote directory...';
-            ls;
+#            ls;
             echo 'Uploading files...';
             mirror --reverse --delete --verbose ./ /remote_target_directory;
             echo 'Upload completed successfully.';
