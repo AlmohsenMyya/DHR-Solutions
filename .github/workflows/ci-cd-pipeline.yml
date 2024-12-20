@@ -32,6 +32,8 @@ jobs:
           echo "Using FTP username: ${FTP_USERNAME}"
           echo "====================================="
           lftp -d -c "
+            set ssl:verify-certificate no;
+            set ftp:passive-mode yes;
             open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
             echo 'Successfully connected to FTP server.';
             echo 'Listing remote directory...';
@@ -39,7 +41,8 @@ jobs:
             echo 'Uploading files...';
             mirror --reverse --delete --verbose ./ /remote_target_directory;
             echo 'Upload completed successfully.';
-          "
+            "
+
 
 
 #name: CI/CD Pipeline
