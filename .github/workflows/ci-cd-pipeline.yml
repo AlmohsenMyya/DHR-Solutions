@@ -53,6 +53,7 @@ jobs:
             public/js/
             public/css/
             public/mix-manifest.json
+            vendor/
 
   deploy:
     name: Deploy via FTP
